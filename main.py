@@ -1,7 +1,8 @@
 class Question:
 
-    def __init__(self, request) -> None:
+    def __init__(self, request, promt) -> None:
         self.request = request
+        self.set_prompt(promt, promt)
 
     def set_next_scene(self, name) -> None:
         self.next_scene = name
@@ -41,9 +42,7 @@ def hello_world(request):
     """
     request_json = request.get_json()
 
-    question = Question(request_json)
+    question = Question(request_json, "What is 6 + 6")
     question.set_next_scene("actions.scene.END_CONVERSATION")
-    prompt = "What is 6 + 6"
-    question.set_prompt(prompt, prompt)
 
     return question.get_json()
