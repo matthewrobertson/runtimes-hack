@@ -1,3 +1,35 @@
+class Question:
+
+    def __init__(self, request) -> None:
+        self.request = request
+
+    def set_next_scene(self, name) -> None:
+        self.next_scene = name
+
+    def set_prompt(self, text, speech) -> None:
+        self.text_prompt = text
+        self.speech_prompt = speech
+
+    def get_json(self) -> object:
+        return {
+            "session": self.request["session"],
+            "scene": {
+                "name": self.request["scene"]["name"],
+                "slots": {},
+                "next": {
+                    "name": self.next_scene
+                }
+            },
+            "prompt": {
+                "override": False,
+                "firstSimple": {
+                    "speech": self.speech_prompt,
+                    "text": self.text_prompt
+                }
+            }
+        }
+
+
 def hello_world(request):
     """Responds to any HTTP request.
     Args:
@@ -8,28 +40,10 @@ def hello_world(request):
         `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
     request_json = request.get_json()
-    print(request_json)
 
+    question = Question(request_json)
+    question.set_next_scene("actions.scene.END_CONVERSATION")
+    prompt = "What is 6 + 6"
+    question.set_prompt(prompt, prompt)
 
-    response = {}
-    response["session"] = request_json["session"]
-    response["scene"] = {
-        "name": request_json["scene"]["name"],
-        "slots": {},
-        "next": {
-            "name": "actions.scene.END_CONVERSATION"
-        }
-    }
-
-    response["prompt"] = {
-        "override": False,
-        "firstSimple": {
-            "speech": "Hello World.",
-            "text": ""
-        }
-    }
-
-    print("RESPONSE = {}".format(response))
-
-    return response
-
+    return question.get_json()
