@@ -1,0 +1,46 @@
+{
+  "actions": [
+    {
+      "description": "Default Welcome Intent",
+      "name": "MAIN",
+      "fulfillment": {
+        "conversationName": "convWelcome"
+      },
+      "intent": {
+        "name": "actions.intent.MAIN"
+      }
+    },
+    {
+      "description": "Say SSML Response",
+      "name": "Raw Input",
+      "fulfillment": {
+        "conversationName": "rawInput"
+      },
+      "intent": {
+        "name": "raw.input",
+        "parameters": [{
+          "name": "ordinal",
+          "type": "org.schema.type.Number"
+          }],
+        "trigger": {
+          "queryPatterns": [
+            "$org.schema.type.Number:ordinal",
+            "$org.schema.type.Number:ordinal right now",
+            "find out about $org.schema.type.Number:ordinal specifically",
+            "hear about $org.schema.type.Number:ordinal"
+          ]
+        }
+      }
+    }
+  ],
+  "conversations": {
+    "convWelcome": {
+      "name": "convWelcome",
+      "url": "https://us-central1-jscma-gcf-test.cloudfunctions.net/pyfunc"
+    },
+    "rawInput": {
+      "name": "rawInput",
+      "url":"https://us-central1-jscma-gcf-test.cloudfunctions.net/pyfunc"
+    }
+  }
+}
