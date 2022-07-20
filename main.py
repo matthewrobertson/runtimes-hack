@@ -1,5 +1,5 @@
 import json
-
+import random
 
 class InputParser:
 
@@ -21,7 +21,7 @@ class InputParser:
 
 class Question:
 
-    def __init__(self, x, y, prefix = "") -> None:
+    def __init__(self, x = random.randrange(10), y = random.randrange(10), prefix = "") -> None:
         self.x = x
         self.y = y
         self.prefix = prefix
@@ -65,7 +65,7 @@ class Answer:
 
     def get_json(self) -> object:
         if self.input.correct():
-            q = Question(3, 3, "That is correct!")
+            q = Question(prefix = "That is correct!")
             return q.get_json()
         
         q = Question(self.input.x(), self.input.y(), "Sorry that is incorrect.")
@@ -112,7 +112,7 @@ class Conversation:
             token = self.request["conversation"]["conversationToken"]
             return Answer(token, self.input)
 
-        return Question(5, 4)
+        return Question()
 
 
 def hello_world(request):
