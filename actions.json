@@ -7,7 +7,16 @@
         "conversationName": "convWelcome"
       },
       "intent": {
-        "name": "actions.intent.MAIN"
+        "name": "actions.intent.MAIN",
+        "trigger": {
+          "queryPatterns": [
+            "talk to Runtimes math",
+            "ask me some math questions",
+            "ask me some plus questions",
+            "ask me some times questions",
+            "play the math game"
+          ]
+        }
       }
     },
     {
@@ -36,7 +45,12 @@
   "conversations": {
     "convWelcome": {
       "name": "convWelcome",
-      "url": "https://us-central1-jscma-gcf-test.cloudfunctions.net/pyfunc"
+      "url": "https://us-central1-jscma-gcf-test.cloudfunctions.net/pyfunc",
+      "inDialogIntents": [
+        {
+          "name": "actions.intent.CANCEL"
+        }
+      ]
     },
     "rawInput": {
       "name": "rawInput",

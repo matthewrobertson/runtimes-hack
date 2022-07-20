@@ -1,14 +1,35 @@
 import json
-from re import X
+
+
+class InputParser:
+
+    def __init__(self, input) -> None:
+        self.input = input
+
+    def intent_type(self):
+        return self.input[0]["intent"]
+    
+    def correct(self):
+        return True
+    
+    def x(self):
+        return 5
+
+    def y(self):
+        return 4
 
 
 class Question:
 
-    def __init__(self, x, y) -> None:
+    def __init__(self, x, y, prefix = "") -> None:
         self.x = x
         self.y = y
+        self.prefix = prefix
 
     def get_json(self) -> object:
+        text = f'What is {self.x} + {self.y}?'
+        if self.prefix != "":
+            text = self.prefix + " " + text
         return {
             "expectUserResponse": True,
             "expectedInputs": [
@@ -18,8 +39,8 @@ class Question:
                             "items": [
                                 {
                                     "simpleResponse": {
-                                        "textToSpeech": f'What is {self.x} + {self.y}?',
-                                        "displayText": f'What is {self.x} + {self.y}?',
+                                        "textToSpeech": text,
+                                        "displayText": text,
                                     }
                                 }
                             ]
@@ -43,6 +64,20 @@ class Answer:
         self.input = input
 
     def get_json(self) -> object:
+        if self.input.correct():
+            q = Question(3, 3, "That is correct!")
+            return q.get_json()
+        
+        q = Question(self.input.x(), self.input.y(), "Sorry that is incorrect.")
+        return q.get_json()
+
+
+class Goodbye:
+
+    def __init__(self) -> None:
+        pass
+
+    def get_json(self) -> object:
         return {
             "expectUserResponse": False,
             "finalResponse": {
@@ -50,13 +85,34 @@ class Answer:
                     "items": [
                         {
                             "simpleResponse": {
-                                "textToSpeech": "Okay, talk to you next time!"
+                                "textToSpeech": "Okay, thanks for playing!"
                             }
                         }
                     ]
                 }
             }
         }
+
+
+class Conversation:
+
+    def __init__(self, request) -> None:
+        self.request = request
+        self.input = InputParser(request["inputs"])
+
+    def next(self):
+        if self.input.intent_type() == "actions.intent.CANCEL":
+            return Goodbye()
+
+        if "conversationToken" in self.request["conversation"]:
+            print(self.request["conversation"]["conversationToken"])
+            print(self.request["inputs"])
+            state = json.loads(
+                self.request["conversation"]["conversationToken"])
+            token = self.request["conversation"]["conversationToken"]
+            return Answer(token, self.input)
+
+        return Question(5, 4)
 
 
 def hello_world(request):
@@ -70,13 +126,5 @@ def hello_world(request):
     """
     request_json = request.get_json()
     print(json.dumps(request_json, indent=4, sort_keys=True))
-
-    if "conversationToken" in request_json["conversation"]:
-        print(request_json["conversation"]["conversationToken"])
-        print(request_json["inputs"])
-        token = request_json["conversation"]["conversationToken"]
-        ans = Answer(token, request_json["inputs"])
-        return ans.get_json()
-
-    question = Question(5, 4)
-    return question.get_json()
+    convo = Conversation(request_json)
+    return convo.next().get_json()
