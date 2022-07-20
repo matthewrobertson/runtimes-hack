@@ -25,9 +25,9 @@
         "trigger": {
           "queryPatterns": [
             "$org.schema.type.Number:ordinal",
-            "$org.schema.type.Number:ordinal right now",
-            "find out about $org.schema.type.Number:ordinal specifically",
-            "hear about $org.schema.type.Number:ordinal"
+            "$org.schema.type.Number:ordinal",
+            "equals $org.schema.type.Number:ordinal",
+            "is $org.schema.type.Number:ordinal"
           ]
         }
       }
