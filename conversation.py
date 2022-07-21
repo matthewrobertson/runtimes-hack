@@ -1,4 +1,8 @@
 from parser import InputParser
+from goodbye import Goodbye
+from question import Question
+from answer import Answer
+
 class Conversation:
 
     def __init__(self, request) -> None:
@@ -10,8 +14,6 @@ class Conversation:
             return Goodbye()
 
         if token := self.input.conversation_token():
-            print(self.input.conversation_token)
-            print(self.request["inputs"])
             return Answer(token, self.input)
 
         return Question()

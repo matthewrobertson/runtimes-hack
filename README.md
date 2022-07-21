@@ -18,3 +18,9 @@ Install the [actions CLI](https://developers.google.com/assistant/df-asdk/action
 ```
 gactions update --action_package actions.json --project jscma-fun
 ```
+
+## Run the unit tests
+
+```bash
+python3 -m unittest conversation_test
+```

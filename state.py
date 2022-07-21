@@ -2,6 +2,7 @@ import json
 
 class State:
     def __init__(self, conversation_token = "") -> None:
+        self.conversation_token = conversation_token
         if conversation_token != "":
             self.state = json.loads(conversation_token)
         else:
