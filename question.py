@@ -3,9 +3,9 @@ import json
 
 class Question:
 
-    def __init__(self, x = random.randrange(10), y = random.randrange(10), prefix = "") -> None:
-        self.x = x
-        self.y = y
+    def __init__(self, x = None, y = None, prefix = "") -> None:
+        self.x = x or random.randrange(10)
+        self.y = y or random.randrange(10)
         self.prefix = prefix
 
     def get_json(self) -> object:
