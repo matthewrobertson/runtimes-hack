@@ -1,4 +1,4 @@
-from parser import InputParser
+from input_parser import InputParser
 from goodbye import Goodbye
 from question import Question
 from answer import Answer
