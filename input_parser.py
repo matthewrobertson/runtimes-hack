@@ -1,4 +1,5 @@
 import state
+import re
 
 class InputParser:
 
@@ -17,7 +18,7 @@ class InputParser:
         return self.request["inputs"][0]["intent"]
 
     def correct(self):
-        return self.state.correct(int(self.arg_value("text")))
+        return self.state.correct(self.arg_value("text"))
     
     def x(self):
         return self.state.x()
@@ -25,9 +26,15 @@ class InputParser:
     def y(self):
         return self.state.y()
 
-    def arg_value(self, name) -> str:
+    def arg_value(self, name) -> int:
         if "arguments" in self.request["inputs"][0]:
             args = self.request["inputs"][0]["arguments"]
             arg = next(x for x in args if x["name"] == name)
             if arg:
-                return arg["textValue"]
+                return self.parse_int(arg["textValue"])
+
+    def parse_int(self, val) -> int:
+        match = re.findall(r'(\d+)', val)
+        if len(match) > 0:
+            return int(match[-1])
+        raise Exception("invalid response: contained no digits")

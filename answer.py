@@ -7,9 +7,13 @@ class Answer:
         self.input = input
 
     def get_json(self) -> object:
-        if self.input.correct():
-            q = Question(prefix = "That is correct!")
+        try:
+            if self.input.correct():
+                q = Question(prefix = "That is correct!")
+                return q.get_json()
+            
+            q = Question(self.input.x(), self.input.y(), "Sorry that is incorrect.")
             return q.get_json()
-        
-        q = Question(self.input.x(), self.input.y(), "Sorry that is incorrect.")
-        return q.get_json()
+        except:
+            q = Question(self.input.x(), self.input.y(), "Sorry I did not understand that.")
+            return q.get_json()
